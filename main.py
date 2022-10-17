@@ -1,13 +1,16 @@
-import discord
-from discord.ext import commands
+import nextcord
+from nextcord.ext import commands
 import random
 import os
+intents = nextcord.Intents.default()
+intents.members = True
+intents.message_content = True
 description = '''Frost's discord bot.Prefix is ?'''
 bot = commands.Bot(command_prefix='?', description=description)
 
 @bot.event
 async def on_ready():
-	activity = discord.Game(name="I do dat magic  ", type=3)
+	activity = discord.Game(name="I do dat magic", type=3)
 	await bot.change_presence(status=discord.Status.idle, activity=activity)
 	print('Logged in as')
 	print(bot.user.name)
