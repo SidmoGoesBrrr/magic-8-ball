@@ -2,7 +2,7 @@ import nextcord as discord
 from nextcord.ext import commands
 import random 
 import os
-intents = nextcord.Intents.default()
+intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
 description = '''Frost's discord bot.Prefix is ?'''
