@@ -22,38 +22,33 @@ async def on_ready():
 @bot.slash_command(description="Adds two numbers cause clearly you are too dumb to do so")
 async def add(ctx, left: int, right: int):
 	"""Adds two numbers together."""
-	await ctx.send(left + right)
+	await ctx.respond(left + right)
 
 @bot.slash_command(description="Standard ping command")
 async def ping(ctx):
-    await ctx.send(f"Pong! {round(bot.latency * 1000)}ms")
+    await ctx.respond(f"Pong! {round(bot.latency * 1000)}ms")
 
     
-@bot.slash_command(description="Allows you to chose between multiple choices")
-async def choose(ctx, *choices: str):
-	"""Chooses between multiple choices."""
-	await ctx.send(random.choice(choices))
-
 
 @bot.slash_command(description="Repeats a message many times")
-async def repeat(ctx, times: int, content='repeating...'):
+async def repeat(ctx, times: int, content:str):
     """Repeats a message multiple times."""
     if times >= 70:
-      return await ctx.send("That is too much for me to handle! Try below 70.")
+      return await ctx.respond("That is too much for me to handle! Try below 70.")
     elif times <= 0:
-      return await ctx.send("Give me number of times in positive")
+      return await ctx.respond("Give me number of times in positive")
     
       
     for i in range(times):
-      await ctx.send(content)
+      await ctx.respond(content)
 
 @bot.slash_command(description="Repeats a message once")
 async def say(ctx,*,content):
-    await ctx.send(content)
+    await ctx.respond(content)
 
-@bot.slash_command(description="Asks a question to the almighty Magic 8 Ball")
+@bot.slash_command(description="Asks a question to the almighty Magic 8 Ball(Eg: /ask am i a potato)")
 async def ask(ctx, *, question):
-  message = ctx.message.content.lower()
+  message = question.lower()
   list = ["will", "how", "why","is" ,
   "when", "where", "who", "whom","I","@","can","am","should","are","were","if","did","does","do","has","was"]
   bool = False
@@ -61,9 +56,9 @@ async def ask(ctx, *, question):
     if x in message.split():
       bool = True
   if bool == False:
-    return await ctx.send("Invalid question format.")
+    return await ctx.respond("Invalid question format.")
     
-  await ctx.send(
+  await ctx.respond(
 	  random.choice([
 	        "It is certain :8ball:", "It is decidedly so :8ball:",
 	        "Without a doubt :8ball:", "Yes, definitely :8ball:",
@@ -108,13 +103,17 @@ embed2.add_field(name="Choose", value="Chooses between two choices", inline=Fals
 
 @bot.slash_command(description="Just your average help command")
 async def help(ctx):
-	await ctx.send(embed=embed2)
+	await ctx.respond(embed=embed2)
 
 
 @bot.slash_command(description="Get to know the bot a bit")
 async def about(ctx):
-	await ctx.send(embed=embed)
-
+	await ctx.respond(embed=embed)
+  
+@bot.slash_command(description="Allows you to chose between multiple choices. Eg- /choose pizza pasta burger")
+async def choose(ctx,*,choices):
+  e=choices.split(" ")
+  await ctx.respond(random.choice(e))
   
 keep_alive.run()
 bot.run(my_secret)
