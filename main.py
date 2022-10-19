@@ -1,14 +1,17 @@
-import nextcord as discord
-from nextcord.ext import commands
-import random 
 import os
+import discord
+import random
+my_secret = os.environ['token1']
+import flask 
+import keep_alive
+description = '''Wee woo'''
 intents = discord.Intents.default()
-description = '''Frost's discord bot.Prefix is ?'''
-bot = commands.Bot(command_prefix='?', description=description)
+intents.members = True
+bot = discord.Bot(description=description,intents=intents)
 
 @bot.event
 async def on_ready():
-	activity = discord.Game(name="I do dat magic", type=3)
+	activity = discord.Game(name="Very Cool Bot", type=3)
 	await bot.change_presence(status=discord.Status.idle, activity=activity)
 	print('Logged in as')
 	print(bot.user.name)
@@ -16,41 +19,50 @@ async def on_ready():
 	print('------')
 
 
-@bot.command()
+@bot.slash_command(description="Adds two numbers cause clearly you are too dumb to do so")
 async def add(ctx, left: int, right: int):
 	"""Adds two numbers together."""
 	await ctx.send(left + right)
 
+@bot.slash_command(description="Standard ping command")
+async def ping(ctx):
+    await ctx.send(f"Pong! {round(bot.latency * 1000)}ms")
 
-@bot.command(description='For when you wanna settle the score some other way')
+    
+@bot.slash_command(description="Allows you to chose between multiple choices")
 async def choose(ctx, *choices: str):
 	"""Chooses between multiple choices."""
 	await ctx.send(random.choice(choices))
 
 
-@bot.command()
+@bot.slash_command(description="Repeats a message many times")
 async def repeat(ctx, times: int, content='repeating...'):
     """Repeats a message multiple times."""
-    if times >= 50:
-      return await ctx.send("That is too much for me to handle! Try below 50.")
+    if times >= 70:
+      return await ctx.send("That is too much for me to handle! Try below 70.")
     elif times <= 0:
       return await ctx.send("Give me number of times in positive")
+    
+      
     for i in range(times):
       await ctx.send(content)
 
+@bot.slash_command(description="Repeats a message once")
+async def say(ctx,*,content):
+    await ctx.send(content)
 
-@bot.command(description='The classic 8Ball', aliases=['8ball'])
+@bot.slash_command(description="Asks a question to the almighty Magic 8 Ball")
 async def ask(ctx, *, question):
-  await ctx.message.add_reaction("<a:React_8Ball:742587699453493288>")
   message = ctx.message.content.lower()
   list = ["will", "how", "why","is" ,
-  "when", "where", "who", "whom","I","@","can","am","should","are","were","if","did","does","do"]
+  "when", "where", "who", "whom","I","@","can","am","should","are","were","if","did","does","do","has","was"]
   bool = False
   for x in list:
     if x in message.split():
       bool = True
   if bool == False:
     return await ctx.send("Invalid question format.")
+    
   await ctx.send(
 	  random.choice([
 	        "It is certain :8ball:", "It is decidedly so :8ball:",
@@ -85,29 +97,24 @@ embed2.colour = 0x00FFFF
 embed2.add_field(name="Help", value="Displays this command", inline=False)
 embed2.add_field(
     name="About", value="Shows information about the bot ", inline=False)
-embed2.add_field(
-    name="Invite", value="Displays the bot's invite link ", inline=False)
 embed2.add_field(name="Repeat", value="Repeats a phrase many times *Number of times comes first*", inline=False)
 embed2.add_field(name="Ask", value="Asks Magic 8 Ball a question", inline=False)
 embed2.add_field(name="Add", value="Adds numbers for you(When you are too dumb to do it yourself)", inline=False)
 embed2.add_field(name="Choose", value="Chooses between two choices", inline=False)
-@bot.command(description='Invite link')
-async def invite(ctx):
-	await ctx.send(
-	    "https://discord.com/oauth2/authorize?client_id=742254708000817193&scope=bot&permissions=0"
-	)
 
 
-bot.remove_command('help')
 
 
-@bot.command(description='Help')
+
+@bot.slash_command(description="Just your average help command")
 async def help(ctx):
 	await ctx.send(embed=embed2)
 
 
-@bot.command(description='About the bot(Not help)')
+@bot.slash_command(description="Get to know the bot a bit")
 async def about(ctx):
 	await ctx.send(embed=embed)
+
   
-bot.run(os.environ["TOKEN"])
+keep_alive.run()
+bot.run(my_secret)
