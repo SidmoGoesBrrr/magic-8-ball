@@ -3,8 +3,6 @@ from nextcord.ext import commands
 import random 
 import os
 intents = discord.Intents.default()
-intents.members = True
-intents.message_content = True
 description = '''Frost's discord bot.Prefix is ?'''
 bot = commands.Bot(command_prefix='?', description=description)
 
